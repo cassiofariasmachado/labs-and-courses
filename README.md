@@ -7,3 +7,4 @@ Repository for my experiments and courses.
 ## Courses
 
 * Eloquent javascript - Book (Loading :arrows_counterclockwise:)
+* Curso completo do desenvolvedor NodeJS e MongoDB - Book (Done :white_check_mark:)

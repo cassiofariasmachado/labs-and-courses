@@ -1,0 +1,43 @@
+<div id="pergaminhos">					
+	<h3>Pergaminhos</h3>
+	
+	<ul>
+		<% acoes.forEach(function(acao) { %>
+			<li>
+				<%
+					var textoAcao;
+					var tipo = parseInt(acao.tipo);
+
+					switch(tipo) {
+						case 1:
+							textoAcao = 'aldeão(ões) coletando recursos';
+							break;
+						case 2: 
+							textoAcao = 'aldeão(ões) em enforcamento programado';
+							break;
+						case 3: 
+							textoAcao = 'aldeão(ões) em treinamento de história';
+							break;
+						case 4: 
+							textoAcao = 'aldeão(ões) em treinamento de magia';
+							break;
+						default:
+							textoAcao = '';
+							break;
+					}
+
+					var segundosRestantes = Math.round((acao.termino - new Date().getTime()) / 1000);
+
+				%>
+
+				<%= acao.quantidadeAldeoes %> <%= textoAcao %> 
+				<small>
+					 - restam <span class="segundos-restante"><%= segundosRestantes %></span> segundos
+					<a href="/acao/revogar?idAcao=<%= acao._id %>">revogar acao</a>
+				</small>
+				
+			</li>
+		<% }); %>
+	</ul>
+	
+</div>

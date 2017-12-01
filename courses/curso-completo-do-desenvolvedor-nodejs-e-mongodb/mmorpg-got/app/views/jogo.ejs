@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>MMORPG - Game of Thrones</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-2.2.1.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+
+		<script>
+			$(document).ready(function(){
+				var $acoes = $('#acoes');
+
+				$('#btn-sair').click(function() {
+					window.location.href = '/sair';
+				});
+
+				$('#btn-suditos').click(function() {
+					$('#mensagem').hide();
+					$.get('/suditos')
+						.then(function(response){
+							$acoes.html(response);
+						});
+				});
+
+				$('#btn-pergaminhos').click(function() {
+					$('#mensagem').hide();
+					$.get('/pergaminhos')
+						.then(function(response){
+							$acoes.html(response);
+							clearTimeout(cronometroEvento);
+							cronometro();
+						});
+				});
+
+				var cronometroEvento = undefined;
+
+				function cronometro() {
+					$('.segundos-restante').each(function() {
+						var segundos = $(this).html();
+						var segundosAtualizados = parseInt(segundos) - 1;
+						if(segundosAtualizados < 0) {
+							window.location.href = "/jogo?mensagem=acaoConcluida";
+						} else {
+							$(this).html(segundosAtualizados);
+						}
+						
+					});
+
+					cronometroEvento = setTimeout(cronometro, 1000);
+				}
+
+				
+			});
+		</script>
+	</head>
+
+	<body class="body-jogo">
+
+		<nav class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<div class="form-group sair">
+					<button type="button" class="btn btn-info pull-right" id="btn-sair">Sair</button>
+				</div>
+			</div>
+		</nav>
+
+	    <div class="container">
+	    	
+			<% if (mensagem === "falha") { %>
+				<div id="mensagem" class="alert alert-danger">
+					<strong>Ação inválida!</strong>
+				</div>
+			<% } %>
+			
+			<% if (mensagem === "sucesso") { %>
+			<div id="mensagem" class="alert alert-success">
+				<strong>Ação executada com sucesso!</strong>
+			</div>
+			<% } %>
+
+			<% if (mensagem === "acaoConcluida") { %>
+			<div id="mensagem" class="alert alert-success">
+				<strong>Uma ação foi concluída com sucesso!</strong>
+			</div>
+			<% } %>
+
+			<% if (mensagem === "acaoRevogada") { %>
+			<div id="mensagem" class="alert alert-success">
+				<strong>A ação foi revogada com sucesso!</strong>
+			</div>
+			<% } %>
+
+			<div class="row">
+	    		<div class="col-sm-3 casa">
+					<img src="images/casa_<%= usuario.casa %>.jpg" />
+				</div>
+
+	    		<div class="col-sm-9">
+					<div class="row barra-superior">
+						<div class="col-sm-2"> 
+							<img src="images/habilidades/temor.jpg" title="Temor" alt="Temor" />
+							<span><%= atributos.temor %></span>
+						</div>
+						
+						<div class="col-sm-2"> 
+							<img src="images/habilidades/sabedoria.jpg" title="Sabedoria" alt="Sabedoria"/>
+							<span><%= atributos.sabedoria %></span>
+						</div>
+						
+						<div class="col-sm-2"> 
+							<img src="images/habilidades/comercio.jpg" title="Comércio" alt="Comércio"/>
+							<span><%= atributos.comercio %></span>
+						</div>
+						
+						<div class="col-sm-2"> 
+							<img src="images/habilidades/magia.jpg" title="Magia" alt="Magia"/>
+							<span><%= atributos.magia %></span>
+						</div>
+					</div>
+				</div>
+	    	</div>
+			
+			<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-9">
+					<div class="acoes" id="acoes">Senhor, o que deseja fazer hoje?</div>					
+				</div>
+			</div>
+			
+		</div>	
+		
+		<div class="barra-inferior">
+			<div class="container">
+			
+				<div class="row">
+					<div class="col-sm-1">
+						<img src="images/outros/suditos.jpg" title="Aldeões" alt="Aldeões" id="btn-suditos"/>
+						<span><%= atributos.suditos %></span>
+					</div>
+					
+					<div class="col-sm-1">
+						<img src="images/outros/pergaminho.jpg" title="Pergaminhos" alt="Pergaminhos" id="btn-pergaminhos"/>
+					</div>
+					
+					<div class="col-sm-8"></div>
+					
+					<div class="col-sm-2">
+						<img src="images/outros/moeda.jpg" title="Moeda" alt="Moeda"/>
+						<span><%= atributos.moeda %></span>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
