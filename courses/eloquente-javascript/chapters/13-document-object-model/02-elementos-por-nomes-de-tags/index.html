@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Cabeçalho com um elemento <span>span</span>.</h1>
+    <p>Um parágrafo com <span>um</span>, <span>dois</span> spans.</p>
+
+    <script>
+        function byTagName(node, tagName) {
+
+            function recursiveByTagName(node, tagName) {
+                if (node.nodeType === document.ELEMENT_NODE) {
+                    let children = Array.from(node.children);
+                    return getChildNodes(children).concat(getNestedChildNodes(children));
+                }
+
+                return [];
+
+                function getChildNodes(children) {
+                    return children.filter((child) => {
+                        return child.tagName === tagName.toUpperCase();
+                    });
+                }
+
+                function getNestedChildNodes(children) {
+                    return children.map(function (child) {
+                        return recursiveByTagName(child, tagName);
+                    }).reduce(function (prev, current) {
+                        return prev.concat(current);
+                    }, []);
+                }
+            }
+
+            return recursiveByTagName(node, tagName)
+        }
+
+        console.log(byTagName(document.body, "h1"));
+        // → 1
+        console.log(byTagName(document.body, "span").length);
+        // → 3
+        var p = document.querySelector("p");
+        console.log(byTagName(p, "span").length);
+        // → 2
+    </script>
+</body>
+
+</html>

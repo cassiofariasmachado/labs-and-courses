@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas width="400" height="400"></canvas>
+
+    <script>
+        function randomSpeed() {
+            return new Vector(Math.random() * 100, Math.random() * 100);
+        }
+
+        function Ball(position, radius) {
+            this.position = new Vector(position.x + radius, position.y + radius);
+            this.speed = randomSpeed();
+            this.radius = radius;
+            this.color = 'red';
+        }
+
+        Ball.prototype.move = function (step, box) {
+            var newPos = this.position.plus(this.speed.times(step));
+
+            // Fix-me: Sometimes the ball escape out of the box
+            if (box.obstacleAt(newPos, this.radius)) {
+                if (this.speed.x < 0 || this.position.y < 0) {
+                    this.speed = randomSpeed();
+                } else {
+                    this.speed = randomSpeed().times(-1);
+                }
+            }
+
+            this.position = newPos;
+        }
+
+        Ball.prototype.draw = function (context, position) {
+            context.beginPath();
+            context.arc(this.position.x, this.position.y, this.radius, 0, 7);
+            context.fillStyle = this.color;
+            context.fill();
+        }
+
+        function Box(position, width, height) {
+            this.position = position;
+            this.width = width;
+            this.height = height;
+        }
+
+        Box.prototype.draw = function (context) {
+            context.beginPath();
+            context.strokeRect(this.position.x, this.position.y, this.width, this.width);
+        }
+
+        Box.prototype.obstacleAt = function (position, size) {
+            var xStart = Math.floor(position.x - size);
+            var xEnd = Math.ceil(position.x + size);
+            var yStart = Math.floor(position.y - size);
+            var yEnd = Math.ceil(position.y + size);
+
+            return xStart < this.position.x ||
+                xEnd > this.position.x + this.width ||
+                yStart < this.position.y ||
+                yEnd > this.position.y + this.height;
+        }
+
+        function Vector(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        Vector.prototype.plus = function (other) {
+            return new Vector(this.x + other.x, this.y + other.y);
+        };
+
+        Vector.prototype.times = function (factor) {
+            return new Vector(this.x * factor, this.y * factor);
+        };
+
+        var cx = document.querySelector("canvas").getContext("2d");
+
+        var lastTime = null;
+
+        var box = new Box(new Vector(10, 10), 200, 200);
+        box.draw(cx);
+
+        var ball = new Ball(new Vector(10, 10), 5);
+        ball.draw(cx);
+
+        function frame(time) {
+            if (lastTime != null)
+                updateAnimation(Math.min(100, time - lastTime) / 1000);
+            lastTime = time;
+            requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+
+        function updateAnimation(step) {
+            cx.clearRect(0, 0, 400, 400);
+            ball.move(step, box);
+            box.draw(cx);
+            ball.draw(cx);
+        }
+    </script>
+</body>
+
+</html>

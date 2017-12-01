@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="grid"></div>
+    <button id="next">Next generation</button>
+
+    <script>
+        let grid = document.querySelector('#grid');
+        let next = document.querySelector('#next');
+
+        var table = [
+            [true, false, true, false, true],
+            [true, false, true, false, true],
+            [true, false, true, false, true],
+            [true, false, true, false, true],
+            [true, false, true, false, true],
+        ];
+
+        createTable(table);
+
+        next.addEventListener('click', (event) => {
+            var table = getTable();
+            var newTable = nextGeneration(table);
+            createTable(newTable)
+        });
+
+        function Vector(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        Vector.prototype.plus = function (other) {
+            return new Vector(this.x + other.x, this.y + other.y);
+        };
+
+        Vector.prototype.times = function (factor) {
+            return new Vector(this.x * factor, this.y * factor);
+        };
+
+        function getTable() {
+            var checkboxes = Array.prototype.slice.call(document.querySelectorAll('[type=checkbox]'));
+            var trs = document.querySelectorAll('tr');
+
+            var table = [];
+            let lineLength = Math.ceil(checkboxes.length / trs.length);
+
+            for (let i = 0, j = checkboxes.length, k = 0; i < j; i += lineLength, k++) {
+                table[k] = checkboxes.slice(i, i + lineLength).map((elem) => elem.checked);
+            }
+
+            return table;
+        }
+
+        function isInside(table, position) {
+            let heigth = table.length;
+            let width = table[0].length;
+
+            return position.y >= 0 && position.y < heigth && position.x >= 0 && position.x < width;
+        }
+
+        function getNeighboors(table, position) {
+            let positions = [
+                new Vector(-1, 0),
+                new Vector(-1, -1),
+                new Vector(0, -1),
+                new Vector(1, 0),
+                new Vector(1, 1),
+                new Vector(0, 1)
+            ];
+
+            return positions.map((elem) => elem.plus(position))
+                .filter((elem) => isInside(table, elem))
+                .map((elem) => table[elem.x][elem.y])
+        }
+
+        function nextGeneration(table) {
+            let newTable = JSON.parse(JSON.stringify(table));
+
+            for (let i = 0; i < table.length; i++) {
+                for (let j = 0; j < table[i].length; j++) {
+                    let neighboors = getNeighboors(table, new Vector(i, j));
+                    let currentCell = table[i][j];
+                    let aliveNeighboors = neighboors.filter((elem) => elem).length;
+
+                    if (currentCell && (aliveNeighboors < 2 || aliveNeighboors > 3)) {
+                        newTable[i][j] = false;
+                    }
+
+                    if (!currentCell && aliveNeighboors === 3) {
+                        newTable[i][j] = true;
+                    }
+                }
+            }
+
+            return newTable;
+        }
+
+        function createTable(table) {
+            let tableElem = document.createElement('table');
+
+            for (let i = 0; i < table.length; i++) {
+                let trElem = document.createElement('tr');
+
+                for (let j = 0; j < table[i].length; j++) {
+                    let tdElem = document.createElement('td');
+                    let checkboxElem = document.createElement('input');
+                    checkboxElem.type = 'checkbox';
+                    checkboxElem.checked = table[i][j];
+                    tdElem.appendChild(checkboxElem);
+                    trElem.appendChild(tdElem);
+                }
+
+                removeAllChilds(grid);
+                tableElem.appendChild(trElem);
+            }
+
+            grid.appendChild(tableElem);
+        }
+
+        function removeAllChilds(element) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        };
+    </script>
+</body>
+
+</html>

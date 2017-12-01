@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../paint/paint.css">
+</head>
+
+<body>
+    <script src="../paint/paint.js"></script>
+
+    <script>
+        tools.Rectangle = function (event, cx) {
+            //To-fix: Fake retangle is in wrong position sometimes
+            let currentPosition = relativePos(event, cx.canvas);
+            cx.beginPath();
+            cx.moveTo(currentPosition.x, currentPosition.y);
+
+            let rectangleStyle = (top, left, width, height, color) => {
+                return `position: absolute; top: ${top}px; left: ${left}px; width: ${width}px; height: ${height}px; background-color: ${color}`;
+            }
+
+            let rectangle = elt('div');
+
+            document.body.appendChild(rectangle);
+
+            trackDrag((event) => {
+                let rectPosition = findRect(currentPosition, {
+                    x: event.pageX,
+                    y: event.pageY
+                });
+                rectangle.style = rectangleStyle(rectPosition.x, rectPosition.y, rectPosition.width,
+                    rectPosition.heigth, cx.fillStyle);
+            }, (event) => {
+                let lastPosition = relativePos(event, cx.canvas);
+                let rectPosition = findRect(currentPosition, lastPosition);
+                cx.fillRect(rectPosition.x, rectPosition.y, rectPosition.width, rectPosition.heigth);
+                document.body.removeChild(rectangle);
+            });
+        };
+
+        function findRect(posOne, posTwo) {
+            return {
+                x: Math.min(posOne.x, posTwo.x),
+                y: Math.min(posOne.y, posTwo.y),
+                width: Math.abs(posOne.x - posTwo.x),
+                heigth: Math.abs(posOne.y - posTwo.y)
+            };
+        }
+
+        createPaint(document.body);
+    </script>
+</body>
+
+</html>

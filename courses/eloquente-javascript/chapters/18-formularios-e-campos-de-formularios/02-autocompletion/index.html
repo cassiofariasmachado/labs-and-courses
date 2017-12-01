@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <input type="text" id="field">
+    <div id="suggestions" style="cursor: pointer"></div>
+
+    <script>
+        // Builds up an array with global variable names, like
+        // 'alert', 'document', and 'scrollTo'
+        var terms = [];
+        for (var name in window) {
+            terms.push(name);
+        }
+
+        let field = document.querySelector('#field');
+        let sugestions = document.querySelector('#suggestions');
+
+        field.addEventListener('change', (event) => {
+            updateSugestions(event.target.value);
+        });
+
+        sugestions.addEventListener('click', (event) => {
+            updateField(event.target.textContent);
+        });
+
+        function updateSugestions(text) {
+            removeAllChilds(sugestions);
+            terms.filter((elem) => {
+                return elem.indexOf(text) === 0;
+            }).forEach((elem) => {
+                var div = document.createElement('div');
+                div.textContent = elem;
+                sugestions.appendChild(div);
+            });
+        }
+
+        function removeAllChilds(element) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        }
+
+        function updateField(text) {
+            field.value = text;
+        }
+    </script>
+
+</body>
+
+</html>

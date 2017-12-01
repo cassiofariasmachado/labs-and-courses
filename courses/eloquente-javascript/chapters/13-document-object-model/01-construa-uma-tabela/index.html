@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        /* Define uma visualização mais limpa para tabelas */
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            padding: 3px 8px;
+        }
+
+        th {
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="mountains.js"></script>
+    <script>
+        function buildTable(data) {
+
+            function createHeader(texts) {
+                let header = document.createElement('tr');
+                texts.forEach((text) => {
+                    header.appendChild(createCell('th', text));
+                });
+                return header;
+            }
+
+            function createCell(name, text) {
+                let cell = document.createElement(name);
+                let textNode = document.createTextNode(text);
+                cell.appendChild(textNode);
+                return cell;
+            }
+
+            let table = document.createElement('table');
+
+            let header = createHeader(['Name', 'Altura', 'País']);
+            table.appendChild(header);
+
+            data.forEach((mountain) => {
+                var row = document.createElement('tr');
+                var texts = [mountain.name, mountain.height, mountain.country];
+
+                texts.forEach((text) => {
+                    let cell = createCell('td', text);
+                    row.appendChild(cell);
+                });
+
+                table.appendChild(row);
+            })
+
+            return table;
+        }
+
+        document.body.appendChild(buildTable(MOUNTAINS));
+    </script>
+</body>
+
+</html>

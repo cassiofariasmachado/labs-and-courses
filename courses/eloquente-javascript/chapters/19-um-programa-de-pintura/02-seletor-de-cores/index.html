@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../paint/paint.css">
+</head>
+
+<body>
+    <script src="../paint/paint.js"></script>
+
+    <script>
+        function pixelAt(cx, x, y) {
+            try {
+                var data = cx.getImageData(x, y, 1, 1);
+                return data.data;
+            } catch (e) {
+                if (e instanceof SecurityError)
+                    link.href = "javascript:alert(" +
+                    JSON.stringify("Can't save: " + e.toString()) + ")";
+                else
+                    throw e;
+            }
+        }
+
+        function colorAsString(red, green, blue) {
+            return `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        tools["Pick color"] = function (event, cx) {
+            trackDrag((event) => {
+                var color = pixelAt(cx, event.pageX, event.pageY);
+                var hexColor = colorAsString(color[0], color[1], color[2]);
+
+                console.log(hexColor);
+
+                cx.fillStyle = hexColor;
+                cx.strokeStyle = hexColor;
+            });
+        };
+
+        createPaint(document.body);
+    </script>
+</body>
+
+</html>

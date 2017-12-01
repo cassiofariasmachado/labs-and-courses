@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <canvas width="800" height="400"></canvas>
+    <script>
+        var cx = document.querySelector("canvas").getContext("2d");
+
+        function drawTrapeze(context, left, top) {
+            context.beginPath();
+            context.moveTo(left, top);
+            context.lineTo(left - 30, top + 50);
+            context.lineTo(left + 130, top + 50);
+            context.lineTo(left + 100, top);
+            context.lineTo(left, top);
+            context.stroke();
+        }
+
+        function drawDiamond(context, size, color, left, top) {
+
+            var centerOfDiamond = {
+                left: left + Math.ceil(size / 2),
+                top: top + Math.ceil(size / 2)
+            };
+
+            context.moveTo(left, top);
+            context.translate(centerOfDiamond.left, centerOfDiamond.top);
+            context.rotate(Math.PI / 4);
+            context.translate(-centerOfDiamond.left, -centerOfDiamond.top);
+            context.fillStyle = color;
+            context.fillRect(left, top, size, size);
+
+            context.resetTransform();
+        }
+
+        function drawZigZag(context, zigZags, left, top) {
+            context.beginPath();
+            context.moveTo(left, top);
+
+            for (var i = 0; i < zigZags; i++) {
+                var toRight = i % 2 === 0;
+                var heigth = (i + 1) * 5 + top;
+
+                if (toRight) {
+                    context.lineTo(left + 100, heigth);
+                } else {
+                    context.lineTo(left, heigth);
+                }
+            }
+
+            context.stroke();
+        }
+
+        function drawSpiral(context, left, top) {
+            // Yes, these was "copy and paste", but I tried =P
+            var radius = 50,
+                leftCenter = left + radius,
+                topCenter = top + radius;
+
+            context.beginPath();
+            context.moveTo(leftCenter, topCenter);
+
+            for (var i = 0; i < 300; i++) {
+                var angle = i * Math.PI / 30;
+                var dist = radius * i / 300;
+
+                context.lineTo(leftCenter + Math.cos(angle) * dist, topCenter + Math.sin(angle) * dist);
+            }
+            context.stroke();
+        }
+
+        function drawStar(context, left, top) {
+            // Yes, these was "copy and paste", but I tried =P
+            var radius = 50,
+                leftCenter = left + radius,
+                topCenter = top + radius;
+
+            context.beginPath();
+            context.moveTo(leftCenter + radius, topCenter);
+
+            for (var i = 1; i <= 8; i++) {
+                var angle = i * Math.PI / 4;
+                var newLeft = leftCenter + Math.cos(angle) * radius;
+                var newTop = topCenter + Math.sin(angle) * radius;
+
+                context.quadraticCurveTo(leftCenter, topCenter, newLeft, newTop);
+            }
+
+            context.fillStyle = "gold";
+            context.fill();
+        }
+
+
+        drawTrapeze(cx, 100, 100);
+        drawDiamond(cx, 50, 'red', 250, 100);
+        drawZigZag(cx, 20, 330, 100);
+        drawSpiral(cx, 450, 100);
+        drawStar(cx, 550, 100);
+    </script>
+
+</body>
+
+</html>

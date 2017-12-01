@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="../game/game.css">
+
+    <script src="../game/game_levels.js"></script>
+    <script src="../game/game.js"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        function runLevel(level, Display, andThen) {
+            var display = new Display(document.body, level);
+            var running = "yes";
+
+            function handlePause(event) {
+                if (event.keyCode == 27) {
+                    if (running == "no") {
+                        running = "yes";
+                        runAnimation(animation);
+                    } else if (running == "pausing") {
+                        running = "yes";
+                    } else if (running == "yes") {
+                        running = "pausing";
+                    }
+                }
+            }
+
+            addEventListener("keydown", handlePause);
+            var arrows = trackKeys(arrowCodes);
+
+            function animation(step) {
+                if (running == "pausing") {
+                    running = "no";
+                    return false;
+                }
+
+                level.animate(step, arrows);
+                display.drawFrame(step);
+                if (level.isFinished()) {
+                    display.clear();
+                    removeEventListener("keydown", handlePause);
+                    arrows.unregister();
+                    if (andThen)
+                        andThen(level.status);
+                    return false;
+                }
+            }
+            runAnimation(animation);
+        }
+
+        runGame(GAME_LEVELS, DOMDisplay);
+    </script>
+</body>
+
+</html>

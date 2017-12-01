@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        button.active {
+            color: #f00;
+        }
+
+        #wrapper div {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div data-tabname="one">Tab one</div>
+        <div data-tabname="two">Tab two</div>
+        <div data-tabname="three">Tab three</div>
+    </div>
+
+    <script>
+        function asTabs(node) {
+            var childNodes = Array.from(node.children);
+
+            childNodes.forEach(function (child) {
+                var tabName = child.getAttribute('data-tabname');
+                var button = createButton(tabName);
+
+                button.addEventListener('click', function (event) {
+                    desactiveAllButtons();
+                    hideAllTabs(childNodes);
+                    event.target.className += 'active';
+                    child.style.display = 'block';
+                });
+
+                node.appendChild(button);
+            });
+        }
+
+        function hideAllTabs(tabs) {
+            tabs.forEach(function (tab) {
+                tab.style.display = 'none';
+            });
+        }
+
+        function desactiveAllButtons() {
+            var activeTabs = document.querySelectorAll('.active');
+            activeTabs.forEach(function (elem) {
+                elem.classList.remove('active');
+            });
+        }
+
+        function createButton(text) {
+            var button = document.createElement('button');
+            var textNode = document.createTextNode(text);
+            button.appendChild(textNode);
+            return button;
+        }
+
+        asTabs(document.querySelector("#wrapper"));
+    </script>
+</body>
+
+</html>

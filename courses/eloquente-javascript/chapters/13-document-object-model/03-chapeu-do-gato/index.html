@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+        }
+
+        #cat,
+        #hat {
+            position: absolute;
+        }
+
+        #cat {
+            top: calc(50% - 60px);
+            left: calc(50% - 37px);
+        }
+
+        #hat {
+            top: calc(50% - 100px);
+            left: calc(50% - 27.5px);
+        }
+    </style>
+
+</head>
+
+<body>
+    <img src="img/cat.png" id="cat" data-angle="0" data-last-time="null">
+    <img src="img/hat.png" id="hat" data-angle="0" data-last-time="null">
+
+    <script>
+        var cat = document.querySelector("#cat");
+        var hat = document.querySelector("#hat");
+
+        function animate(element, defaultPosition, time) {
+            var angle = Number.parseFloat(element.dataset.angle);
+            var lastTime = Number.parseFloat(element.dataset.lastTime);
+
+            if (!Number.isNaN(lastTime))
+                angle += (time - lastTime) * 0.001;
+
+            element.style.top = "calc(" + defaultPosition.top + " + " + (Math.sin(angle) * 50) + "px)";
+            element.style.left = "calc(" + defaultPosition.left + " + " + (Math.cos(angle) * 200) + "px)";
+
+            element.dataset.angle = angle;
+            element.dataset.lastTime = time;
+
+            requestAnimationFrame(animate.bind(null, element, defaultPosition));
+        }
+
+        requestAnimationFrame(animate.bind(null, cat, { top: "50% - 60px", left: "50% - 37px" }));
+        requestAnimationFrame(animate.bind(null, hat, { top: "50% - 100px", left: "50% - 27.5px" }));
+    </script>
+</body>
+
+</html>

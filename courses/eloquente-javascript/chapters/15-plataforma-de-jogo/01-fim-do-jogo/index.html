@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="../game/game.css">
+
+    <script src="../game/game_levels.js"></script>
+    <script src="../game/game.js"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        function runGame(plans, Display) {
+
+            function startLevel(n, lives) {
+                runLevel(new Level(plans[n]), Display, function (status) {
+                    if (status == "lost") {
+                        if (lives > 0) {
+                            startLevel(n, lives - 1);
+                        } else {
+                            startLevel(0, 3);
+                            console.log("You lost!");
+                        }
+                    } else if (n < plans.length - 1)
+                        startLevel(n + 1, lives);
+                    else
+                        console.log("You win!");
+                });
+            }
+            startLevel(0, 3);
+        }
+
+        runGame(GAME_LEVELS, DOMDisplay);
+    </script>
+</body>
+
+</html>
