@@ -6,5 +6,5 @@ Repository for my experiments and courses.
 
 ## Courses
 
-* Eloquent javascript - Book (Loading :arrows_counterclockwise:)
-* Curso completo do desenvolvedor NodeJS e MongoDB - Book (Done :white_check_mark:)
+* **Eloquent javascript** - [Book](https://github.com/braziljs/eloquente-javascript) (Loading :arrows_counterclockwise:)
+* **Curso completo do desenvolvedor NodeJS e MongoDB** - [Udemy course](https://www.udemy.com/curso-completo-do-desenvolvedor-nodejs/) (Done :white_check_mark:)
