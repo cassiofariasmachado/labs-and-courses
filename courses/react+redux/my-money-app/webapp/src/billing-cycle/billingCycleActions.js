@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { toastr } from 'react-redux-toastr'
 import { reset as resetForm, initialize } from 'redux-form'
+import HOSTS from '../consts'
 
 import { showTabs, selectTab } from '../common/tab/tabActions'
 
-const BASE_URL = 'http://localhost:3003/api'
 const INITIAL_VALUES = {
     credits: [{}],
     debits: [{}]
@@ -17,7 +17,7 @@ const CONSTANTS = {
 export default CONSTANTS
 
 export function getList() {
-    const request = axios.get(`${BASE_URL}/billingCycles`)
+    const request = axios.get(`${HOSTS.API_URL}/billingCycles`)
     return {
         type: CONSTANTS.BILLING_CYCLES_FETCHED,
         payload: request
@@ -39,7 +39,7 @@ export function remove(billingCycle) {
 function submit(billingCycle, method) {
     return dispatch => {
         const id = billingCycle._id || ''
-        axios[method](`${BASE_URL}/billingCycles/${id}`, billingCycle)
+        axios[method](`${HOSTS.API_URL}/billingCycles/${id}`, billingCycle)
             .then(res => {
                 toastr.success('Sucesso', 'Operação realizada com sucesso!')
                 dispatch(init())
