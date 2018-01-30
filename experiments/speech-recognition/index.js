@@ -1,30 +1,21 @@
 const fs = require('fs'),
-    ffmpeg = require('fluent-ffmpeg'),
+    audioConverterService = require('./audioConverterService'),
+    googleCloudService = require('./googleCloudService'),
+    fileService = require('./fileService'),
+    paths = require('./paths'),
     path = require('path')
 
 const fileName = process.argv[2]
-const filePath = path.parse(`${process.cwd()}/${fileName}`)
+const filePath = path.resolve(`${process.cwd()}/${fileName}`)
 
-function convert(input, output, callback) {
-    ffmpeg(input)
-        .output(output)
-        .on('end', () => {
-            console.log('Audio conversion ended')
-            callback(null)
-        })
-        .run();
-}
+fileService.createDir(paths.output.base)
+fileService.createDir(paths.output.audios)
+fileService.createDir(paths.output.texts)
 
-const outputPath = path.resolve(__dirname + '/output/' + filePath.name + '.mp3');
-const inputPath = path.resolve(`${process.cwd()}/${fileName}`)
-
-console.log(outputPath)
-
-console.log(inputPath)
-
-convert('./pra-ser-sincero.mp4', './pra-ser-sincero.mp3', function (err) {
-    if (!err) {
-        console.log('Audio conversion complete')
-    }
-});
-
+audioConverterService.convertToWav(filePath)
+    .then((convertedFilepath) => {
+        googleCloudService.saveFile(convertedFilepath)
+            .then(() => {
+                googleCloudService.transcribe(convertedFilepath)
+            })
+    })
