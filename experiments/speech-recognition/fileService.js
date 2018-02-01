@@ -1,7 +1,6 @@
-const paths = require('./paths'),
-    path = require('path'),
-    fs = require('fs')
-
+const paths = require('./paths')
+const path = require('path')
+const fs = require('fs')
 
 function saveTxt(text, filename) {
     const output = path.resolve(`${paths.output.texts}/${filename}.txt`)

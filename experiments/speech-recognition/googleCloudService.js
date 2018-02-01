@@ -1,11 +1,9 @@
-const speech = require('@google-cloud/speech'),
-    storage = require('@google-cloud/storage'),
-    path = require('path'),
-    fileService = require('./fileService')
-
+const speech = require('@google-cloud/speech')
+const storage = require('@google-cloud/storage')
+const path = require('path')
+const fileService = require('./fileService')
 
 const bucketName = 'speech-recognition-audios'
-const projectId = 'meuprojeto-169919'
 
 function saveFile(filename) {
     const storageClient = new storage()
@@ -15,15 +13,15 @@ function saveFile(filename) {
         .upload(filename)
 }
 
-function transcribe(filepath) {
+function transcribe(filepath, encoding, sampleRateHertz, languageCode) {
     const parsedFilepath = path.parse(filepath)
 
     const speechClient = new speech.SpeechClient()
 
     const config = {
-        encoding: 'LINEAR16',
-        sampleRateHertz: 16000,
-        languageCode: 'pt-BR'
+        encoding,
+        sampleRateHertz,
+        languageCode
     }
 
     const audio = {
