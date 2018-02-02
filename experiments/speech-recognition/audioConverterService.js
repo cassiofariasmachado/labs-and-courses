@@ -23,9 +23,6 @@ function convertToWav(filepath, encoding, rateHertz) {
             .withAudioChannels(1)
             .withAudioFrequency(rateHertz)
             .output(output)
-            .on('start', (elem) => {
-                console.log(elem)
-            })
             .on('codecData', (info) => {
                 totalDuration = getDurationInSeconds(info.duration)
             })
