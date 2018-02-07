@@ -14,14 +14,16 @@ function transcribe(filename, encoding, languageCode) {
 
     const recognizeStream = service.createRecognizeStream({ content_type: watsonSuportedEncodings[encoding], model: `${languageCode}_NarrowbandModel` })
 
-    fs.createReadStream(filename)
-        .pipe(recognizeStream)
-        .pipe(fs.createWriteStream(path.resolve(`${paths.output.texts}/${parsedFilepath.name}.txt`)))
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(filename)
+            .pipe(recognizeStream)
+            .pipe(fs.createWriteStream(path.resolve(`${paths.output.texts}/${parsedFilepath.name}.txt`)))
 
-    recognizeStream.setEncoding('utf8');
+        recognizeStream.setEncoding('utf8')
 
-    recognizeStream.on('data', (transcription) => {
-        console.log(`Transcription: ${transcription}`)
+        recognizeStream.on('data', (transcription) => {
+            resolve(transcription)
+        })
     })
 }
 

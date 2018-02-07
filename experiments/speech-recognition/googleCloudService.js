@@ -2,6 +2,7 @@ const speech = require('@google-cloud/speech')
 const storage = require('@google-cloud/storage')
 const path = require('path')
 const fileService = require('./fileService')
+const fs = require('fs')
 
 const bucketName = 'speech-recognition-audios'
 
@@ -13,7 +14,7 @@ function saveFile(filename) {
         .upload(filename)
 }
 
-function transcribe(filepath, encoding, sampleRateHertz, languageCode) {
+function longRunningRecognize(filepath, encoding, sampleRateHertz, languageCode) {
     const parsedFilepath = path.parse(filepath)
 
     const speechClient = new speech.SpeechClient()
@@ -33,24 +34,55 @@ function transcribe(filepath, encoding, sampleRateHertz, languageCode) {
         audio
     }
 
-    speechClient.longRunningRecognize(request)
+    return speechClient.longRunningRecognize(request)
         .then((data) => {
             const operation = data[0]
             return operation.promise()
         })
         .then((data) => {
-            const response = data[0]
-            const transcription = response.results
-                .map(result => result.alternatives[0].transcript).join('\n')
-            console.log(`Transcription: ${transcription}`)
+            const transcription = data[0].results
+                .map(result => result.alternatives[0].transcript)
+                .join('\n')
             fileService.saveTxt(transcription, parsedFilepath.name)
+            return transcription
         })
         .catch((err) => {
             console.error('ERROR:', err);
         });
 }
 
+function recognize(filepath, encoding, sampleRateHertz, languageCode) {
+    const config = {
+        encoding: encoding,
+        sampleRateHertz: sampleRateHertz,
+        languageCode: languageCode,
+    }
+
+    const speechClient = new speech.SpeechClient()
+
+    const audio = {
+        content: fs.readFileSync(filepath).toString('base64'),
+    }
+
+    const request = {
+        config: config,
+        audio: audio,
+    }
+
+    return speechClient
+        .recognize(request)
+        .then(data => {
+            return data[0].results
+                .map(result => result.alternatives[0].transcript)
+                .join('\n')
+        })
+        .catch(err => {
+            console.error('ERROR:', err);
+        })
+}
+
 module.exports = {
-    transcribe,
+    recognize,
+    longRunningRecognize,
     saveFile
 }
