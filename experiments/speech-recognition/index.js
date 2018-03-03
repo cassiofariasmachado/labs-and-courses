@@ -1,6 +1,7 @@
 const fs = require('fs')
 const audioConverterService = require('./audioConverterService')
 const googleCloudService = require('./googleCloudService')
+const watsonService = require('./watsonService')
 const fileService = require('./fileService')
 const paths = require('./paths')
 const path = require('path')
@@ -16,11 +17,28 @@ require(`yargs`)
     `Detects speech using Google Speech Recognition in a local video file.`,
     {},
     opts => {
+        console.log(opts.filename)
         audioConverterService.convertToWav(opts.filename, opts.encoding, opts.sampleRateHertz)
-            .then((convertedFilepath) => {
+            .then(convertedFilepath => {
                 googleCloudService.saveFile(convertedFilepath)
                     .then(() => {
-                        googleCloudService.transcribe(convertedFilepath)
+                        googleCloudService.longRunningRecognize(convertedFilepath, opts.encoding, opts.sampleRateHertz, opts.languageCode)
+                            .then(transcription => {
+                                console.log(`Transcription: ${transcription}`)
+                            })
+                    })
+            })
+    })  
+    .command(
+    `transcribe-watson <filename>`,
+    `Detects speech using Watson Speech to text in a local video file.`,
+    {},
+    opts => {
+        audioConverterService.convertToWav(opts.filename, opts.encoding, opts.sampleRateHertz)
+            .then(convertedFilepath => {
+                watsonService.transcribe(convertedFilepath, opts.encoding, opts.languageCode)
+                    .then(transcription => {
+                        console.log(`Transcription: ${transcription}`)
                     })
             })
     })
