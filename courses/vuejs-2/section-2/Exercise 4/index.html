@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div id="exercise">
+    <!-- 1) Start the Effect with the Button. The Effect should alternate the "highlight" or "shrink" class on each new setInterval tick (attach respective class to the div with id "effect" below) -->
+    <div>
+      <button @click="startEffect">Start Effect</button>
+      <div id="effect" :class="effectClass"></div>
+    </div>
+    <hr>
+
+    <!-- 2) Create a couple of CSS classes and attach them via the array syntax -->
+    <div :class="[ 'box-text', 'bold', 'gray' ]">I got no class :(</div>
+    <hr>
+
+    <!-- 3) Let the user enter a class (create some example classes) and attach it -->
+    <div>
+      <input type="text" v-model="color"> * Supports green, blue, red, gray and yellow
+      <div :class="[ 'box-text', 'bold', color ]">Some text</div>
+    </div>
+    <hr>
+
+    <!-- 4) Let the user enter a class and enter true / false for another class (create some example classes) and attach the classes -->
+    <div>
+      <div>
+        <label for="boxClass">Box class:</label>
+        <input name="boxClass" type="text" v-model="boxClass">
+        <span class="supportedColors">* Supports green, blue, red, gray and yellow</span>
+      </div>
+
+      <input type="checkbox" v-model="isBold"> Bold
+
+      <div :class="[ boxClass, { bold : isBold } ]">Some text</div>
+    </div>
+    <hr>
+
+    <!-- 5) Repeat 3) but now with values for styles (instead of class names). Attach the respective styles.  -->
+    <div>
+      <div>
+        <label for="padding">Padding:</label>
+        <input name="padding" type="text" v-model="padding">
+      </div>
+      <div>
+        <label for="fontWeight">Font weight:</label>
+        <input name="fontWeight" type="text" v-model="fontWeight">
+      </div>
+      <div>
+        <label for="color">Color:</label>
+        <input name="color" type="text" v-model="color">
+      </div>
+
+      <div :style="boxStyles">Some text</div>
+    </div>
+    <hr>
+
+    <!-- 6) Create a simple progress bar with setInterval and style bindings. Start it by hitting the below button. -->
+    <div>
+      <button v-on:click="startProgress">Start Progress</button>
+      <div class="progress" :style="styleProgress">
+        {{ formatedProgress }}
+      </div>
+    </div>
+  </div>
+
+  <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

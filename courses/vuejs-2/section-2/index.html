@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        .demo {
+            width: 100px;
+            height: 100px;
+            background-color: gray;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .blue {
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Data, attributes, directives and v-once -->
+        <h1 v-once>{{ title }}</h1>
+        <p>{{ sayHello() }} -
+            <a v-bind:href="link">Google</a>
+        </p>
+        <p v-html="finishedLink"></p>
+        <hr>
+
+        <!-- Events -->
+        <button v-on:click="counter++">Increase</button>
+        <button v-on:click="secondCounter++">Increase second counter</button>
+        <button v-on:click="counter--">Decrease</button>
+
+        <p>Counter: {{ counter }} / {{ secondCounter }}</p>
+        <p>Result: {{ result() }} / {{ output }}</p>
+
+        <p v-on:mousemove="updateCoordenates">
+            Coordinates: {{ x }} {{ y }} -
+            <span v-on:mousemove.stop="">DEAD SPOT</span>
+        </p>
+        <input type="text" v-on:keyup.enter.space="alertMe">
+        <hr>
+
+        <!-- Two way data binding -->
+        <input type="text" v-model="name">
+        <p>{{ name }}</p>
+
+        <!-- @ for events (v:on) -->
+        <!-- : for binds (v:bind) -->
+
+        <!-- Style -->
+        <div class="demo" :class="divClasses" @click="attachRed = !attachRed"></div>
+        <div class="demo" :class="{ red : attachRed }"></div>
+        <div class="demo" :class="[ color, { red : attachRed } ]"></div>
+        <div class="demo" :style="[ myStyle, { height: width + 'px' } ]"></div>
+
+        <br>
+
+        <input type="text" v-model="color" />
+        <input type="text" v-model="width" />
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                title: 'Hello world!',
+                link: 'http://google.com',
+                finishedLink: '<a href="http://google.com">Google</a>',
+                counter: 0,
+                secondCounter: 0,
+                x: 0,
+                y: 0,
+                name: 'Max',
+                attachRed: false,
+                color: 'green',
+                width: 100
+            },
+            methods: {
+                sayHello: function () {
+                    this.title = 'Hello';
+                    return this.title;
+                },
+                updateCoordenates: function (event) {
+                    this.x = event.clientX;
+                    this.y = event.clientY;
+                },
+                alertMe: function (event) {
+                    alert('Alert!')
+                },
+                result: function () {
+                    console.log('Method')
+                    return this.counter > 5 ? 'Greater than 5' : 'Smaller than 5';
+                }
+            },
+            watch: {
+                counter: function (value) {
+                    let vm = this;
+
+                    setTimeout(function () {
+                        vm.counter = 0;
+                    }, 2000);
+                }
+            },
+            computed: {
+                output: function () {
+                    console.log('Computed')
+                    return this.counter > 5 ? 'Greater than 5' : 'Smaller than 5';
+                },
+                divClasses: function () {
+                    return {
+                        red: this.attachRed,
+                        blue: !this.attachRed
+                    }
+                },
+                myStyle: function () {
+                    return {
+                        backgroundColor: this.color,
+                        width: this.width + 'px'
+                    }
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
