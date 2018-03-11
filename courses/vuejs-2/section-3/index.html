@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- Conditional redering -->
+        <p v-if="show">You can see me!</p>
+        <p v-else>Now you see me!</p>
+
+        <template v-if="show">
+            <h1>Header</h1>
+            <p>Inside template</p>
+        </template>
+
+        <p v-show="show">Do you alse see me?</p>
+
+        <button @click="show = !show">Switch</button>
+        <hr>
+
+        <!-- Render multiple elements -->
+        <ul>
+            <li v-for="(ingredient, i) in ingredients" :key="ingredient">{{ ingredient }} ({{ i }})</li>
+        </ul>
+
+        <button @click="ingredients.push('spices')">Add new</button>
+
+        <hr>
+
+        <template v-for="(ingredient, i) in ingredients">
+            <h1>{{ ingredient }}</h1>
+            <p>{{ i }}</p>
+        </template>
+
+        <hr>
+
+        <ul>
+            <li v-for="person in persons">
+                <div v-for="(value, key, index) in person">
+                    {{ key }}: {{ value }} {{ index }}
+                </div>
+                
+            </li>
+        </ul>
+
+        <span v-for="n in 10">
+            {{ n }}
+        </span>
+
+    </div>
+
+    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
