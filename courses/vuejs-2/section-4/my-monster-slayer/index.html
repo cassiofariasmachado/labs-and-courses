@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Monster Slayer</title>
+
+    <link rel="stylesheet" href="css/foundation.min.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+    <div id="app">
+        <section class="row">
+            <div class="small-6 columns">
+                <h1 class="text-center">YOU</h1>
+                <div class="healthbar">
+                    <div class="healthbar text-center" :style="playerStyle">
+                        {{ percent(player.health) }}
+                    </div>
+                </div>
+            </div>
+            <div class="small-6 columns">
+                <h1 class="text-center">MONSTER</h1>
+                <div class="healthbar">
+                    <div class="healthbar text-center" :style="monsterStyle">
+                        {{ percent(monster.health) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="row controls" v-show="!startedGame" @click="startNewGame">
+            <div class="small-12 columns">
+                <button id="start-game">START NEW GAME</button>
+            </div>
+        </section>
+
+        <section class="row controls" v-show="startedGame">
+            <div class="small-12 columns">
+                <button id="attack" @click="attack">ATTACK</button>
+                <button id="special-attack" @click="attack($event, true)">SPECIAL ATTACK</button>
+                <button id="heal" @click="heal">HEAL</button>
+                <button id="give-up" @click="giveUp">GIVE UP</button>
+            </div>
+        </section>
+
+        <section v-show="logs.length" class="row log">
+            <div class="small-12 columns">
+                <ul>
+                    <li v-for="log in logs" :class="log.className">
+                        {{ log.message }}
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
