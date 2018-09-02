@@ -12,6 +12,7 @@ Repository for my experiments and courses.
 * **Maratona de bots Microsoft** - [TI Capacitation course](https://ticapacitacion.com/curso/botspt/) (Done :white_check_mark:)
 * **Minicurso React Native** - [Rocketseat minicourse](http://code.rocketseat.com.br/minicurso-react-native) (Done :white_check_mark:)
 * **Vue JS 2 - The Complete Guide** - [Udemy course](https://www.udemy.com/vuejs-2-the-complete-guide/learn/v4/overview) (Loading :arrows_counterclockwise:)
+* **Learn You a Haskell for Great Good!** - [Book](http://learnyouahaskell.com) (Loading :arrows_counterclockwise:)
 
 ## Experiments 
 
