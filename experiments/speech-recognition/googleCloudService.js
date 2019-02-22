@@ -14,7 +14,7 @@ function saveFile(filename) {
         .upload(filename)
 }
 
-function longRunningRecognize(filepath, encoding, sampleRateHertz, languageCode) {
+function longRunningRecognize(filepath, encoding, sampleRateHertz, languageCode, model) {
     const parsedFilepath = path.parse(filepath)
 
     const speechClient = new speech.SpeechClient()
@@ -22,7 +22,8 @@ function longRunningRecognize(filepath, encoding, sampleRateHertz, languageCode)
     const config = {
         encoding,
         sampleRateHertz,
-        languageCode
+        languageCode,
+        model
     }
 
     const audio = {

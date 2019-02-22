@@ -4,7 +4,6 @@ const googleCloudService = require('./googleCloudService')
 const watsonService = require('./watsonService')
 const fileService = require('./fileService')
 const paths = require('./paths')
-const path = require('path')
 
 fileService.createDir(paths.output.base)
 fileService.createDir(paths.output.audios)
@@ -17,16 +16,17 @@ require(`yargs`)
     `Detects speech using Google Speech Recognition in a local video file.`,
     {},
     opts => {
-        console.log(opts.filename)
         audioConverterService.convertToWav(opts.filename, opts.encoding, opts.sampleRateHertz)
             .then(convertedFilepath => {
                 googleCloudService.saveFile(convertedFilepath)
                     .then(() => {
-                        googleCloudService.longRunningRecognize(convertedFilepath, opts.encoding, opts.sampleRateHertz, opts.languageCode)
+                        googleCloudService.longRunningRecognize(convertedFilepath, opts.encoding, opts.sampleRateHertz, opts.languageCode, opts.model)
                             .then(transcription => {
-                                console.log(`Transcription: ${transcription}`)
+                                console.log(`Transcription: ${transcription}`)  
                             })
+                            .catch(error => console.error(error))
                     })
+                    .catch(error => console.error(error))
             })
     })  
     .command(
@@ -40,6 +40,7 @@ require(`yargs`)
                     .then(transcription => {
                         console.log(`Transcription: ${transcription}`)
                     })
+                    .catch(error => console.error(error))
             })
     })
     .options({
@@ -64,6 +65,13 @@ require(`yargs`)
             requiresArg: true,
             type: 'string',
         },
+        model: {
+            alias: 'm',
+            default: 'default',
+            global: true,
+            requiresArg: true,
+            type: 'string',
+        }
     })
     .example(`transcribe-google $0 sync ./resources/audio.mp4 -e LINEAR16 -r 16000`)
     .wrap(120)
